@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/styles.css}">
+    <title>Listado de libros</title>
+</head>
+<body class="centrado">
+    <h1>Listado de libros</h1>
+    <a th:href="@{/libro/add}" class="btn btn-blue">Añadir</a>
+    <div id="div_tablaContenido">
+        <table id="tablaContenido">
+            <thead>
+                <tr>
+                    <td>isbn</td>
+                    <td>Título</td>
+                    <td>Autor</td>
+                    <td>Fecha prestamo</td>
+                    <td>Fecha entrega</td>
+                    <td>Acciones</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="libro : ${libros}" th:classAppend="${libro.fechaEntrega != 'Sin prestar' ? 'fondoGris' : ''}">
+                    <td th:text="${libro.isbn}"></td>
+                    <td th:text="${libro.titulo}"></td>
+                    <td th:text="${libro.nombreAutor} + ' ('+ ${libro.nacionalidadAutor} +')'"></td>
+                    <td th:text="${libro.fechaPrestamo}"></td>
+                    <td th:text="${libro.fechaEntrega}"></td>
+                    <td>
+                        <a th:href="@{/libro/prestar/{isbn}(isbn=${libro.isbn})}" th:text="${libro.fechaEntrega == 'Sin prestar' ? 'Prestar' : 'Devolver'}" class="btn btn-yellow"></a>
+                        <a th:href="@{/libro/edit/{isbn}(isbn=${libro.isbn})}" class="btn btn-green">Editar</a>
+                        <a class="btn btn-red" th:href="@{/libro/delete/{isbn}(isbn=${libro.isbn})}">Borrar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

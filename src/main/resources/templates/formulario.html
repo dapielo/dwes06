@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/styles.css}">
+    <title>Añadir Libro</title>
+</head>
+<body>
+    <div class="centrado">
+        <h1>Añadir libro</h1>
+        <form th:action="@{/libro/add}" method="post" th:object="${libroDTO}" id="formularioLibro">
+<!--        <input type="hidden" th:field="*{isbn}">  Aqui no va oculto porque usamos de id un campo que tiene que introducirse a mano -->
+            <div class="div_espaciado">
+                <label for="isbn">ISBN: </label>
+                <input type="text" id="isbn" th:field="*{isbn}"/>
+                <div class="error" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></div>
+            </div>
+            <div class="div_espaciado">
+                <label for="titulo">Título: </label>
+                <input type="text" id="titulo" th:field="*{titulo}"/>
+                <div class="error" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+            </div>
+            <div class="div_espaciado">
+                <select th:field="*{nombreAutor}" id="autor">
+                    <option value="">Selecciona el autor: </option>
+                    <option th:each="autor : ${autores}" th:value="${autor.nombre}" th:text="${autor.nombre} + ' - ' + ${autor.nacionalidad}"></option>
+                </select>
+                <div class="error" th:if="${#fields.hasErrors('nombreAutor')}" th:errors="*{nombreAutor}"></div>
+            </div>
+            <div class="div_espaciado">
+                <button type="submit" class="btn btn-green">Enviar</button>
+                <a th:href="@{/}" class="btn btn-yellow">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
