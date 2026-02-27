@@ -20,6 +20,8 @@ public class Autor {
 
     private String nacionalidad;
 
+// EAGER para que si recuperamos un autor se recuperen tambien sus libros en la misma consulta, mappedBy para indicar que el dueño no es autor,
+// sino libro, y el atributo dueño de la relacion es "autor"
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "autor")
     private List<Libro> libros;
 }

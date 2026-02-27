@@ -17,11 +17,13 @@ public class Libro {
 
     private String titulo;
 
-// Con esta anotación bastaría para que se generase la columna de clave foránea, el persist es para que al añadir un libro se añade su autor si no existe
+// CascadeType.PERSIST es para que al añadir un libro se añade su autor si no existe, pero si se borra un libro no se borrre su autor (CascadeType.ALL)
     @ManyToOne(cascade = {CascadeType.PERSIST}) 
-    @JoinColumn(name = "autor_id") // Usamos esto para ponerle el nombre que queramos
+// Join column porque el dueño de esta relacion es libro al ser el lado de los many
+    @JoinColumn(name = "autor_id")
     private Autor autor;
 
+// mappedBy siempre en el lado NO propietario de la relacion, para indicar a spring que la relacion esta en el atributo que le pasamos de la otra entidad
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "libro")
     Prestamo prestamo;
 }
