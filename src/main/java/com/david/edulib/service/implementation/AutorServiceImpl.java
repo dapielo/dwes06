@@ -20,10 +20,10 @@ public class AutorServiceImpl implements AutorService{
     private final AutorMapper autorMapper;
     private final AutorRepository autorRepository;
 
-// Ojo con la implementación del servicio, como va a pasar información para la vista, y la vista trabaja con DTOs pero el repositorio con
-// Entitys, no devolvemos el dato directamente, devolvemos la conversión a DTO que hacemos a través del mapper
+    // READ
     @Override
     public List<AutorDTO> obtenerTodos(){
+        // Devolvemos DTO no entidad
         return autorRepository.findAllByOrderByNombreAsc().stream()
             .map(autorMapper::toDTO)
             .toList();
@@ -31,11 +31,7 @@ public class AutorServiceImpl implements AutorService{
 
     @Override
     public Optional<AutorDTO> obtenerPorId(Integer id) {
-        // OJO, arriba el map es el de stream, porque tenemos una lista, aqui es un map de optional, que trabaja sobre nuestra clase pero 
-        // devuelve un optional igualmente
-        if (id == null){
-            return Optional.empty();
-        }
+        // map de Optional, permite hacer una transformacion al contenido si no esta vacio
         return autorRepository.findById(id).map(autorMapper::toDTO);
     }
 
@@ -45,6 +41,7 @@ public class AutorServiceImpl implements AutorService{
         return autorRepository.findByNombre(nombre);
     }
 
+    // CREATE Y UPDATE
     @Override
     @Transactional // Poruqe escribe en la base de datos (no es un select)
     public AutorDTO guardar(AutorDTO autorDTO){
@@ -65,7 +62,17 @@ public class AutorServiceImpl implements AutorService{
         }
         return autorMapper.toDTO(autor);
     }
+    
+    // Para el DataLoader
+    @Override
+    @Transactional
+    public void guardar(Autor autor){
+        if (autor != null){
+            autorRepository.save(autor);
+        }
+    }
 
+    // DELETE
     @Override
     @Transactional
     public void borrarPorId(Integer id){
@@ -79,14 +86,6 @@ public class AutorServiceImpl implements AutorService{
     public void borrar(AutorDTO autorDTO){
         if (autorDTO != null){
             autorRepository.delete(autorMapper.toEntity(autorDTO));
-        }
-    }
-
-    @Override
-    @Transactional
-    public void guardar(Autor autor){
-        if (autor != null){
-            autorRepository.save(autor);
         }
     }
 }

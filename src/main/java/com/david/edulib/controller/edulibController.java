@@ -14,9 +14,7 @@ import com.david.edulib.service.AutorService;
 import com.david.edulib.service.LibroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/libro") // para que todos los endpoint vayan sobre esta ruta
@@ -24,7 +22,7 @@ public class edulibController {
     private final LibroService libroService;
     private final AutorService autorService;
 
-    // Página principal, carla el listado de libros en la vista
+    // Página principal
     @GetMapping
     public String principal(Model model){
         model.addAttribute("libros", libroService.obtenerTodos());
@@ -34,7 +32,7 @@ public class edulibController {
 
     // Página para añadir libro, nos devuelve el formulario de creación, le pasamos un DTO vacío
     @GetMapping("/add")
-    public String newLibro(Model model){
+    public String getFormulario(Model model){
         model.addAttribute("libroDTO",LibroDTO.builder().build());
         // Le pasamos al modelo la lista de autores para que los use en el select
         model.addAttribute("autores",autorService.obtenerTodos());

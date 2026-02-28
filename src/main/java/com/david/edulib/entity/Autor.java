@@ -21,9 +21,9 @@ public class Autor {
 
     private String nacionalidad;
 
-// EAGER para que si recuperamos un autor se recuperen tambien sus libros en la misma consulta, mappedBy para indicar que el dueño no es autor,
-// sino libro, y el atributo dueño de la relacion es "autor"
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "autor")
+// EAGER para que si recuperamos un autor se recuperen tambien sus libros en la misma consulta
+//  mappedBy para indicar que el dueño de la relacion es el atributo "autor de la clase Libro
+    @OneToMany(mappedBy = "autor", fetch = FetchType.EAGER)
     @Builder.Default // Para que lombok inicialice la lista de libros y luego el repositorio pueda rellenarlo con los libros (EAGER)
     private List<Libro> libros = new ArrayList<>();
 }

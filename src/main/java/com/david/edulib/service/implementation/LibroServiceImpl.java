@@ -27,6 +27,7 @@ public class LibroServiceImpl implements LibroService{
     private final AutorService autorService;
     private final AutorRepository autorRepository;
 
+    // READ
     @Override
     public List<LibroDTO> obtenerTodos(){
         return libroRepository.findAllByOrderByTituloAsc().stream()
@@ -35,10 +36,11 @@ public class LibroServiceImpl implements LibroService{
     }
 
     @Override
-    public Optional<LibroDTO> obtenerPorId(String isbn){
-        return libroRepository.findById(isbn).map(libroMapper::toDTO);
+    public Optional<LibroDTO> obtenerPorId(String id){
+        return libroRepository.findById(id).map(libroMapper::toDTO);
     }
 
+    // CREATE Y UPDATE
     @Override
     @Transactional
     public LibroDTO guardar(LibroDTO libroDTO) throws LibroException{
@@ -72,11 +74,21 @@ public class LibroServiceImpl implements LibroService{
         return libroMapper.toDTO(libro);
     }
 
+    // Método para el DataLoader, creo el prestamo porque no lo creo en el DataLoader
+    @Override 
+    @Transactional
+    public void guardar(Libro libro){
+        Prestamo p = Prestamo.builder().libro(libro).build();
+        libro.setPrestamo(p);
+        libroRepository.save(libro);
+    }
+
+    // DELETE
     @Override
     @Transactional
-    public void borrarPorId(String isbn){
-        if (isbn != null){
-            libroRepository.deleteById(isbn);
+    public void borrarPorId(String id){
+        if (id != null){
+            libroRepository.deleteById(id);
         }
     }
 
@@ -90,10 +102,10 @@ public class LibroServiceImpl implements LibroService{
 
     @Override
     @Transactional
-    public void togglePrestamo(String isbn){
+    public void togglePrestamo(String id){
         // Si no existe el libro el Optional lanza una excepcion
-        if (isbn != null){
-            Libro libro = libroRepository.findById(isbn).orElseThrow(() -> new LibroException("No existe el libro"));
+        if (id != null){
+            Libro libro = libroRepository.findById(id).orElseThrow(() -> new LibroException("No existe el libro"));
             Prestamo p = libro.getPrestamo();
             if (p.getFechaPrestamo()!=null){
                 p.setFechaEntrega(null);
@@ -104,14 +116,5 @@ public class LibroServiceImpl implements LibroService{
             }
             libroRepository.save(libro);
         }
-    }
-
-    // Método para el DataLoader, creo el prestamo porque no lo creo en el DataLoader
-    @Override 
-    @Transactional
-    public void guardar(Libro libro){
-        Prestamo p = Prestamo.builder().libro(libro).build();
-        libro.setPrestamo(p);
-        libroRepository.save(libro);
     }
 }
