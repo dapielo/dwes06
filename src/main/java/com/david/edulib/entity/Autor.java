@@ -1,5 +1,6 @@
 package com.david.edulib.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,8 +8,8 @@ import lombok.*;
 @Entity
 @Getter @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "autores")
 public class Autor {
     @Id
@@ -23,5 +24,6 @@ public class Autor {
 // EAGER para que si recuperamos un autor se recuperen tambien sus libros en la misma consulta, mappedBy para indicar que el dueño no es autor,
 // sino libro, y el atributo dueño de la relacion es "autor"
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "autor")
-    private List<Libro> libros;
+    @Builder.Default // Para que lombok inicialice la lista de libros y luego el repositorio pueda rellenarlo con los libros (EAGER)
+    private List<Libro> libros = new ArrayList<>();
 }

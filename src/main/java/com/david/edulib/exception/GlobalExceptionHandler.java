@@ -5,10 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import lombok.extern.slf4j.Slf4j;
-
 // Va a capturar todas las Excepciones del Controller
-@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -34,7 +31,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public String nullPointerHandler(NullPointerException e, Model model){
         model.addAttribute("error","Se ha intentado acceder a un dato que no existe");
-        e.printStackTrace();
         return "error/404";
     }
 }

@@ -5,25 +5,26 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Component;
 import com.david.edulib.dto.AutorDTO;
 import com.david.edulib.entity.Autor;
-import lombok.RequiredArgsConstructor;
+import com.david.edulib.exception.AutorException;
 
 @Component
-@RequiredArgsConstructor
 public class AutorMapper {
 
     public Autor toEntity(AutorDTO dto){
-        if (dto == null) return null;
+        if (dto == null) {
+            throw new AutorException("Intentando crear un autor con datos vacíos");
+        }
         return Autor.builder()
-                .id(dto.getId())
+                .id(dto.getId()) // Se lo pasamos, si tra uno JPA hace un update, si no trae (null) hará un insert (clave autogenerada)
                 .nombre(dto.getNombre())
                 .nacionalidad(dto.getNacionalidad())
-                // Importante inicializarlo para no arrastrar un null y que luego spring no falle al intentar recuperar los libros del autor
-                .libros(new ArrayList<>()) 
                 .build();
     }
 
     public AutorDTO toDTO(Autor autor){
-        if (autor == null) return null;
+        if (autor == null) {
+            throw new AutorException("Intentando recuperar un autor que no existe");
+        }
         return AutorDTO.builder()
                 .id(autor.getId())
                 .nombre(autor.getNombre())
