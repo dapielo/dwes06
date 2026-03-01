@@ -1,7 +1,5 @@
 package com.david.edulib.mapper;
 
-import java.util.ArrayList;
-
 import org.springframework.stereotype.Component;
 import com.david.edulib.dto.AutorDTO;
 import com.david.edulib.entity.Autor;
